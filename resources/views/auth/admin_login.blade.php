@@ -57,7 +57,7 @@
                         </div>
                        <form action="" method="post">
                        <div class="form-floating mb-3">
-                            <input type="text" class="form-control" name="username" id="floatingInput" placeholder="usernameadmin">
+                            <input type="text" class="form-control" name="username" id="floatingInput" placeholder="username"value="{{ old('username') }}">
                             <label for="floatingInput">Username</label>
                             @error ('username')
                             {{ $message }}
