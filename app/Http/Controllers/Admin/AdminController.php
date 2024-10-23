@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Middleware\Admin;
 use Illuminate\Container\Attributes\Auth as AttributesAuth;
+use Illuminate\Container\Attributes\Storage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use PhpParser\Node\NullableType;
 
 class AdminController extends Controller
 {
@@ -31,7 +34,8 @@ class AdminController extends Controller
      */
     public function create()
     {
-        
+      $profile = Auth::guard('admin')->user();
+      return view('admin.profile', compact('profile'));
     }
 
     /**
@@ -63,7 +67,26 @@ class AdminController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+       $id_admin = Auth::guard('admin')->user()->id_admin;
+       $admin = Admin::find($id_admin);
+
+       $request->validate([
+            'username' => 'required|enique:admin,username,' .$id_admin . 'id_admin',
+            'password' => 'nullable|min:6',
+            'nama_admin' => 'required',
+            'foto' => 'nullable|image|mimes:jpeg,jpg,gif|max:2048' ,
+        
+       ]);
+
+       $foto = $admin->foto;
+       if ($request->hasFile('foto')) {
+           if ($foto) {
+               Storage::disk('public')->delete('$foto');
+           }
+           $uniqueFile = uniqid() . '_' . $request->file{'foto'}->getClientOriginalName();
+           $request->file('foto')->storeAs('foto_admin', $uniqueFile, 'public');
+           $foto = 'foto_admin'.$uniqueFile;
+       }
     }
 
     /**

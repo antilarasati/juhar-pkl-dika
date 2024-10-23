@@ -21,10 +21,8 @@
                                         @foreach($gurus as $guru)
                                         <tr>
                                             <th scope="row">{{ $loop->interation }}</th>
-                                            <td>{{ $guru->nip }}</td>
-                                            <td>{{ $guru->email }}</td>
-                                            <td>{{ $guru->nama_guru }}</td>
                                             <td>
+                                                
                                                 <img src="('')" alt="">
                                                 <a href="" class=""btn btn->></a>
                                             </td>
