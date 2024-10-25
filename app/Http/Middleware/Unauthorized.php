@@ -18,6 +18,8 @@ class Unauthorized
     {
         if(Auth::guard('admin')->check()) {
             return redirect()->route('admin.dashboard');
+        } elseif (Auth::guard('guru')->check()) {
+            return redirect()->route('guru.dashboard');
         }
         return $next($request);
     }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\PembimbingController;
 use App\Http\Controllers\Auth\AdminLoginController;
 use App\Models\Admin\Pembimbing;
 use Illuminate\Support\Facades\Route;
@@ -15,10 +16,10 @@ Route::middleware(['guest'])->group(function () {
 });
 
 Route::middleware(['admin'])->group(function () {
-    //ADMIN
     Route::get('/admin/logout', [AdminLoginController::class,'login'])->name('admin.logout');
     Route::get('/admin/dashboard', [AdminLoginController::class,'auth'])->name('admin.dashboard');
     Route::get('/admin/profile', [AdminLoginController::class,'auth'])->name('admin.profile');
+    Route::put('/admin/profile', [AdminLoginController::class,'auth'])->name('admin.profile');
 
     //GURU
     Route::get('/admin/guru', [AdminController::class, 'dashboard'])->name('admin.guru');
@@ -36,28 +37,12 @@ Route::middleware(['admin'])->group(function () {
     Route::post('/admin/dudi/edit/{id}', [AdminController::class, 'store'])->name('admin.dudi.edit');
     Route::get('/admin/dudi/edit/{id}', [AdminController::class, 'delete'])->name('admin.dudi.update');
 
-    Route::middleware(['admin'])->group(function () {
     Route::get('/admin/pembimbing', [PembimbingController::class, 'dashboard'])->name('admin_pembimbing');
     Route::get('/admin/pembimbing/tambah', [PembimbingController::class, 'layout'])->name('admin.pembimbing');
     Route::get('/admin/guru', [AdminController::class, 'guru'])->name('admin.guru');
     Route::get('/admin/guru/tambah', [AdminController::class, 'create'])->name('admin.guru.create');
     Route::post('/admin/guru/tambah', [AdminController::class, 'store'])->name('admin.guru.store');
     Route::get('/admin/guru/delete/{id}', [AdminController::class, 'delete'])->name('admin.guru.delete');
+
 });
-
-Route::middleware(['admin'])->group(function () {
-    Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin_dashboard');
-    Route::get('/admin/logout', [AdminController::class, 'layout'])->name('admin.layout');
-    Route::get('/admin/guru', [AdminController::class, 'guru'])->name('admin.guru');
-    Route::get('/admin/guru/tambah', [AdminController::class, 'create'])->name('admin.guru.create');
-    Route::post('/admin/guru/tambah', [AdminController::class, 'store'])->name('admin.guru.store');
-    Route::get('/admin/guru/delete/{id}', [AdminController::class, 'delete'])->name('admin.guru.delete');
-    Route::get('/admin/guru/edit/{id}', [AdminController::class, 'edit'])->name('admin.guru.edit');
-    Route::get('/admin/guru/edit/{id}', [AdminController::class, 'update'])->name('admin.guru.update');
-
-    
-});
-
-
-
-
+  

@@ -2,10 +2,12 @@
 
 namespace App\Models\Admin;
 
+use Illuminate\Container\Attributes\Auth;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+// use Illuminate\Database\Eloquent\Model;
 
-class Guru extends Model
+class Guru extends Authenticatable
 {
     use HasFactory;
     protected $table = 'migration_guru';

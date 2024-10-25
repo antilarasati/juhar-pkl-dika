@@ -45,9 +45,13 @@ return [
             'driver' => 'session',
             'provider' => 'admins',
         ],
+
+        'admin' => [
+            'driver' => 'session',
+            'provider' => 'admins',
+        ],
     ],
-        
-         
+            
     /*
     |--------------------------------------------------------------------------
     | User Providers
@@ -72,6 +76,11 @@ return [
         ],
 
         'admins' => [
+            'driver' => 'eloquent',
+            'model' => env('AUTH_MODEL', App\Models\Admin\Admin::class),
+        ],
+
+        'gurus' => [
             'driver' => 'eloquent',
             'model' => env('AUTH_MODEL', App\Models\Admin\Admin::class),
         ],

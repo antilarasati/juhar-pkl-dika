@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Admin\Guru;
+use Illuminate\Container\Attributes\Auth as AttributesAuth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -22,7 +23,7 @@ class GuruController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function guru()
     {
         $gurus = Guru::all();
         $admin = Auth::guard('admin')->user();
@@ -35,9 +36,9 @@ class GuruController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nip' => 'required|unique:guru,nip|digits::18',
+            'nip' => 'unique:migration_guru,nip|digits::18',
             'email' => 'required|email|unique:guru,email',
-            'password' => 'required|min:6',
+            'password' => 'required|min:8',
             'nama_guru' => 'required',
             'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
@@ -47,7 +48,8 @@ class GuruController extends Controller
         if ($request->hasFile('foto')) {
             $uniqueFile = uniqid() . '_' . $request->file('foto')->getClientOriginalName();
 
-            $foto = $request->file('foto')->storeAs('foto_guru', $uniqueFile, 'public');
+            $request->file('foto')->storeAs('foto_guru', $uniqueFile,'public');
+            $foto = 'foto_guru/' . $uniqueFile;
         }
 
         Guru::create([
@@ -79,17 +81,10 @@ class GuruController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id)
     {
-        //
+        $guru = Guru::find($id);
+        return view('admin.edit_guru', compact('guru'));
     }
 
     /**
@@ -97,10 +92,10 @@ class GuruController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        $id_guru = Auth::guard('guru')->user()->id_guru;
         $guru = Guru::find($id);
 
         $request->validate([
-            'nip' => 'required|digits::18|unique:migration_guru,nip,' .$guru->id_guru. ',id_guru',
             'email' => 'required|email|unique:migration_guru,email,' . $guru->id_guru. ',id_guru',
             'password' => 'required|min:6',
             'nama_guru' => 'required',
@@ -132,8 +127,17 @@ class GuruController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function dashboard()
     {
-        //
+        $guru = Auth::guard('guru')->user();
+        return view('guru.dashboard', compact('guru'));   
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::guard('guru')->logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect()->route('index');
     }
 }
